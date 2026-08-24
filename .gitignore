@@ -1,0 +1,13 @@
+.env
+service-account.json
+oauth_client.json
+token.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+cron.log
+.process_file.lock
+.DS_Store
+inbox/*.md
+processed/*.md
