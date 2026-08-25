@@ -1,6 +1,6 @@
 """
-Đọc (các) file kịch bản đã duyệt (xuất từ Claude chat) → phân loại theo tiêu
-đề → tạo folder trên Drive (trong đúng folder nhóm) + upload Google Docs →
+Đọc (các) file kịch bản đã duyệt (xuất từ Claude chat) → phân loại theo từ
+khoá → tạo folder trên Drive (trong đúng folder nhóm) + upload Google Docs →
 tạo task trên Jira ở đúng cột nhóm đó, có link tới folder Drive.
 
 Cách dùng:
@@ -18,26 +18,15 @@ Cách dùng:
 
     Nội dung kịch bản...
 
-Phân loại theo tiêu đề (xem config.py để đổi từ khoá / cột Jira):
+Phân loại theo từ khoá (soi cả tiêu đề lẫn nội dung, kể cả hashtag ở cuối
+kịch bản — xem config.py để đổi từ khoá / cột Jira / thêm nhóm mới):
 
-  - Tiêu đề chứa "your life as every" (không phân biệt hoa/thường)
-      → folder Drive DRIVE_FOLDER_ID_LORE (folder "05_Lore & Disorder" có sẵn),
-        cột Jira "Law & Disorder"
-  - Còn lại
-      → folder Drive DRIVE_FOLDER_ID_LOWKEY (folder "06_Lowkey Explainer" có
-        sẵn), cột Jira "Lowkey Explainer"
+  - Chứa "your life as every"  → folder DRIVE_FOLDER_ID_LORE, cột "Law & Disorder"
+  - Chứa "star wars"           → folder DRIVE_FOLDER_ID_STARWARS, cột "POV Life"
+  - Còn lại                    → folder DRIVE_FOLDER_ID_LOWKEY, cột "Lowkey Explainer"
 
-Cả 2 folder này PHẢI đã tồn tại sẵn trên Drive — script chỉ tạo folder con
-đánh số bên trong, KHÔNG tự tạo 2 folder gốc này.
-
-Cấu trúc tạo ra trên Drive:
-
-    05_Lore & Disorder/                          (DRIVE_FOLDER_ID_LORE)
-      01_Your Life as Every Rank in the Skitarii/
-        Your Life as Every Rank in the Skitarii   ← Google Doc
-    06_Lowkey Explainer/                          (DRIVE_FOLDER_ID_LOWKEY)
-      01_Tên kịch bản khác/
-        Tên kịch bản khác                          ← Google Doc
+Cả 3 folder này PHẢI đã tồn tại sẵn trên Drive — script chỉ tạo folder con
+đánh số bên trong, KHÔNG tự tạo folder gốc mới.
 """
 
 from __future__ import annotations
@@ -94,19 +83,18 @@ def parse_script_file(path: str) -> dict:
     return {"title": title, "jira_project": config.JIRA_PROJECT_KEY_DEFAULT, "content": content}
 
 
-def categorize(title: str) -> dict:
-    """Xác định nhóm dựa trên tiêu đề. Trả về dict {drive_folder_id,
-    jira_status} — trỏ thẳng vào 1 trong 2 folder Drive có sẵn, KHÔNG tự
-    tạo folder mới."""
-    if config.CATEGORY_LORE_KEYWORD.lower() in title.lower():
-        return {
-            "drive_folder_id": config.DRIVE_FOLDER_ID_LORE,
-            "jira_status": config.JIRA_STATUS_LORE,
-        }
-    return {
-        "drive_folder_id": config.DRIVE_FOLDER_ID_LOWKEY,
-        "jira_status": config.JIRA_STATUS_LOWKEY,
-    }
+def categorize(title: str, content: str) -> dict:
+    """Xác định nhóm dựa trên từ khoá — soi cả tiêu đề lẫn nội dung (bắt được
+    cả hashtag như #StarWars ở cuối kịch bản). Khớp lần lượt theo thứ tự
+    trong config.CATEGORIES, cái nào khớp trước dùng cái đó; không khớp gì
+    thì rơi về config.DEFAULT_CATEGORY. Trả về dict {name, drive_folder_id,
+    jira_status} — trỏ thẳng vào 1 folder Drive có sẵn, KHÔNG tự tạo folder
+    mới."""
+    haystack = f"{title}\n{content}".lower()
+    for category in config.CATEGORIES:
+        if category["keyword"].lower() in haystack:
+            return category
+    return config.DEFAULT_CATEGORY
 
 
 def get_next_seq_number(drive, parent_id: str) -> int:
@@ -238,9 +226,9 @@ def process_one(path: str, drive, seq_cache: dict, move_when_done: bool) -> bool
         print(f"   ❌ Lỗi định dạng file: {e}")
         return False
 
-    category = categorize(parsed["title"])
+    category = categorize(parsed["title"], parsed["content"])
     parent_id = category["drive_folder_id"]
-    print(f"   🏷️  Phân loại: {'Lore & Disorder' if category['jira_status'] == config.JIRA_STATUS_LORE else 'Lowkey Explainer'}")
+    print(f"   🏷️  Phân loại: {category['name']}")
 
     if parent_id not in seq_cache:
         seq_cache[parent_id] = get_next_seq_number(drive, parent_id)

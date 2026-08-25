@@ -23,17 +23,30 @@ JIRA_API_TOKEN = _get("JIRA_API_TOKEN")
 JIRA_PROJECT_KEY_DEFAULT = os.environ.get("JIRA_PROJECT_KEY_DEFAULT", "CONTENT")
 JIRA_ISSUE_TYPE = os.environ.get("JIRA_ISSUE_TYPE", "Task")
 
-# --- Phân loại kịch bản theo tiêu đề ---
-# Tiêu đề chứa cụm từ này (không phân biệt hoa/thường) → nhóm "Lore",
-# dùng thẳng folder Drive có sẵn (DRIVE_FOLDER_ID_LORE) + cột Jira
-# "Law & Disorder". Còn lại → nhóm "Lowkey": folder DRIVE_FOLDER_ID_LOWKEY +
-# cột "Lowkey Explainer". Không tự tạo folder mới — cả 2 folder này PHẢI đã
-# tồn tại sẵn trên Drive, chỉ lấy ID trỏ thẳng vào.
-CATEGORY_LORE_KEYWORD = os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every")
-DRIVE_FOLDER_ID_LORE = _get("DRIVE_FOLDER_ID_LORE")
-JIRA_STATUS_LORE = os.environ.get("JIRA_STATUS_LORE", "Law & Disorder")
-DRIVE_FOLDER_ID_LOWKEY = _get("DRIVE_FOLDER_ID_LOWKEY")
-JIRA_STATUS_LOWKEY = os.environ.get("JIRA_STATUS_LOWKEY", "Lowkey Explainer")
+# --- Phân loại kịch bản theo từ khoá (soi trong cả tiêu đề + nội dung, vd
+# hashtag ở cuối kịch bản) — kiểm tra lần lượt theo thứ tự trong CATEGORIES,
+# khớp cái nào trước dùng cái đó. Không khớp cái nào → rơi vào DEFAULT_CATEGORY.
+# Mỗi nhóm trỏ thẳng vào 1 folder Drive có sẵn — KHÔNG tự tạo folder gốc mới,
+# folder phải tồn tại sẵn trên Drive từ trước.
+CATEGORIES = [
+    {
+        "name": "Lore",
+        "keyword": os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every"),
+        "drive_folder_id": _get("DRIVE_FOLDER_ID_LORE"),
+        "jira_status": os.environ.get("JIRA_STATUS_LORE", "Law & Disorder"),
+    },
+    {
+        "name": "Star Wars",
+        "keyword": os.environ.get("CATEGORY_STARWARS_KEYWORD", "star wars"),
+        "drive_folder_id": _get("DRIVE_FOLDER_ID_STARWARS"),
+        "jira_status": os.environ.get("JIRA_STATUS_STARWARS", "POV Life"),
+    },
+]
+DEFAULT_CATEGORY = {
+    "name": "Lowkey",
+    "drive_folder_id": _get("DRIVE_FOLDER_ID_LOWKEY"),
+    "jira_status": os.environ.get("JIRA_STATUS_LOWKEY", "Lowkey Explainer"),
+}
 
 BASE_DIR = os.path.dirname(__file__)
 INBOX_DIR = os.path.join(BASE_DIR, "inbox")

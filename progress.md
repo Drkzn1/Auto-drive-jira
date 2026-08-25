@@ -40,7 +40,7 @@ Claude chat (viết + tự duyệt kịch bản)
 - [x] Xác thực Google Drive qua **OAuth** (không dùng Service Account — tài khoản cá nhân không có storage quota, gây lỗi `storageQuotaExceeded`)
 - [x] OAuth app đã **Publish sang Production** (Google Cloud Console) — token không còn tự hết hạn sau 7 ngày như lúc còn ở "Testing"
 - [x] Jira: tạo task qua REST API v3, tự động transition sang đúng cột qua `/transitions` endpoint
-- [x] Phân loại 2 nhóm (Lore & Disorder / Lowkey Explainer) dựa theo từ khoá trong tiêu đề — trỏ thẳng vào 2 folder Drive có sẵn của người dùng (`DRIVE_FOLDER_ID_LORE`, `DRIVE_FOLDER_ID_LOWKEY`), **không** tự tạo folder gốc mới
+- [x] Phân loại 3 nhóm (Lore & Disorder / Star Wars / Lowkey Explainer) dựa theo từ khoá — soi cả tiêu đề lẫn nội dung (bắt được hashtag như `#StarWars` ở cuối kịch bản), khớp theo thứ tự ưu tiên trong `config.CATEGORIES`, không khớp gì → rơi về `DEFAULT_CATEGORY`. Trỏ thẳng vào folder Drive có sẵn của người dùng (`DRIVE_FOLDER_ID_LORE` / `DRIVE_FOLDER_ID_STARWARS` / `DRIVE_FOLDER_ID_LOWKEY`), **không** tự tạo folder gốc mới. Thêm nhóm mới chỉ cần thêm 1 entry vào `config.CATEGORIES`.
 - [x] Đánh số thứ tự tự động (`NN_Tên kịch bản`), riêng theo từng nhóm
 - [x] Cron job (`*/5 * * * *`) tự quét `inbox/`, không cần chạy tay
 - [x] **Khoá file (lock)** chống race condition khi cron + chạy tay trùng thời điểm
