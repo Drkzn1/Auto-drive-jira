@@ -69,6 +69,7 @@ Claude chat (viết + tự duyệt kịch bản)
 2. **Token OAuth tự hết hạn sau 7 ngày** (app ở chế độ "Testing") → Publish app sang "Production" trên Google Cloud Console
 3. **Tạo nhầm folder lồng / lạc sang Shared Drive khác** khi thêm logic phân loại → bỏ kiểu tìm-hoặc-tạo-theo-tên, trỏ thẳng ID folder có sẵn
 4. **Race condition**: cron + chạy tay cùng lúc → trùng folder/task → thêm file lock (`fcntl.flock`) chặn chạy song song
+5. **Ưu tiên phân loại sai khi tiêu đề khớp nhiều nhóm cùng lúc** (vd "Your Life as Every Level of the Enclave (Fallout)" vừa khớp "your life as every" (Lore) vừa khớp "fallout") → xảy ra 2 lần (Star Wars, rồi Fallout) vì Lore được check trước. Đã sửa: đổi thứ tự `config.CATEGORIES`, franchise cụ thể (Star Wars, Fallout) luôn check TRƯỚC Lore chung chung.
 
 ---
 

@@ -28,13 +28,13 @@ JIRA_ISSUE_TYPE = os.environ.get("JIRA_ISSUE_TYPE", "Task")
 # khớp cái nào trước dùng cái đó. Không khớp cái nào → rơi vào DEFAULT_CATEGORY.
 # Mỗi nhóm trỏ thẳng vào 1 folder Drive có sẵn — KHÔNG tự tạo folder gốc mới,
 # folder phải tồn tại sẵn trên Drive từ trước.
+#
+# Thứ tự ưu tiên: franchise CỤ THỂ (Star Wars, Fallout) luôn check TRƯỚC
+# "Lore" — vì "Lore" khớp cả những tiêu đề dạng "Your Life as Every..." dùng
+# chung cho nhiều franchise (Warhammer 40k mặc định, nhưng cũng có thể là
+# Star Wars/Fallout nếu ghi rõ trong tên). Franchise cụ thể phải thắng trước
+# để không bị Lore "vồ" mất.
 CATEGORIES = [
-    {
-        "name": "Lore",
-        "keyword": os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every"),
-        "drive_folder_id": _get("DRIVE_FOLDER_ID_LORE"),
-        "jira_status": os.environ.get("JIRA_STATUS_LORE", "Law & Disorder"),
-    },
     {
         "name": "Star Wars",
         "keyword": os.environ.get("CATEGORY_STARWARS_KEYWORD", "star wars"),
@@ -46,6 +46,12 @@ CATEGORIES = [
         "keyword": os.environ.get("CATEGORY_FALLOUT_KEYWORD", "fallout"),
         "drive_folder_id": _get("DRIVE_FOLDER_ID_FALLOUT"),
         "jira_status": os.environ.get("JIRA_STATUS_FALLOUT", "Hidden Game Theory"),
+    },
+    {
+        "name": "Lore",
+        "keyword": os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every"),
+        "drive_folder_id": _get("DRIVE_FOLDER_ID_LORE"),
+        "jira_status": os.environ.get("JIRA_STATUS_LORE", "Law & Disorder"),
     },
 ]
 DEFAULT_CATEGORY = {
