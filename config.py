@@ -41,6 +41,12 @@ CATEGORIES = [
         "drive_folder_id": _get("DRIVE_FOLDER_ID_STARWARS"),
         "jira_status": os.environ.get("JIRA_STATUS_STARWARS", "POV Life"),
     },
+    {
+        "name": "Fallout",
+        "keyword": os.environ.get("CATEGORY_FALLOUT_KEYWORD", "fallout"),
+        "drive_folder_id": _get("DRIVE_FOLDER_ID_FALLOUT"),
+        "jira_status": os.environ.get("JIRA_STATUS_FALLOUT", "Hidden Game Theory"),
+    },
 ]
 DEFAULT_CATEGORY = {
     "name": "Lowkey",

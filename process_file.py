@@ -23,9 +23,10 @@ kịch bản — xem config.py để đổi từ khoá / cột Jira / thêm nhó
 
   - Chứa "your life as every"  → folder DRIVE_FOLDER_ID_LORE, cột "Law & Disorder"
   - Chứa "star wars"           → folder DRIVE_FOLDER_ID_STARWARS, cột "POV Life"
+  - Chứa "fallout"             → folder DRIVE_FOLDER_ID_FALLOUT, cột "Hidden Game Theory"
   - Còn lại                    → folder DRIVE_FOLDER_ID_LOWKEY, cột "Lowkey Explainer"
 
-Cả 3 folder này PHẢI đã tồn tại sẵn trên Drive — script chỉ tạo folder con
+Cả 4 folder này PHẢI đã tồn tại sẵn trên Drive — script chỉ tạo folder con
 đánh số bên trong, KHÔNG tự tạo folder gốc mới.
 """
 
