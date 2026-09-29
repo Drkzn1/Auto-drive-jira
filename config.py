@@ -48,11 +48,27 @@ CATEGORIES = [
         "jira_status": os.environ.get("JIRA_STATUS_FALLOUT", "Hidden Game Theory"),
     },
     {
-        "name": "Lore",
-        "keyword": os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every"),
-        "drive_folder_id": _get("DRIVE_FOLDER_ID_LORE"),
-        "jira_status": os.environ.get("JIRA_STATUS_LORE", "Law & Disorder"),
+        # Khớp theo TIÊU ĐỀ bắt đầu bằng "How ..." (không phải substring
+        # trong toàn bộ nội dung — "how" xuất hiện quá thường xuyên trong văn
+        # bản bình thường, vd "however", "show", nên chỉ check phần đầu tiêu
+        # đề để tránh false-positive). Đích đến giống hệt DEFAULT_CATEGORY
+        # (Lowkey) — khai báo tường minh ở đây để "How..." luôn thắng Lore
+        # nếu lỡ trùng cả 2, thay vì trông cậy vào việc rơi xuống default.
+        "name": "How-To",
+        "title_prefix": os.environ.get("CATEGORY_HOWTO_PREFIX", "how "),
+        "drive_folder_id": _get("DRIVE_FOLDER_ID_LOWKEY"),
+        "jira_status": os.environ.get("JIRA_STATUS_LOWKEY", "Lowkey Explainer"),
     },
+    # --- TẠM DỪNG (29/09) — kênh Lore & Disorder bị tắt kiếm tiền, nên
+    # kịch bản "your life as every" giờ rơi thẳng xuống DEFAULT_CATEGORY
+    # (Lowkey) thay vì vào đây. Bật lại bằng cách bỏ comment khối dưới đây
+    # khi kênh được bật kiếm tiền trở lại — không cần đổi gì khác.
+    # {
+    #     "name": "Lore",
+    #     "keyword": os.environ.get("CATEGORY_LORE_KEYWORD", "your life as every"),
+    #     "drive_folder_id": _get("DRIVE_FOLDER_ID_LORE"),
+    #     "jira_status": os.environ.get("JIRA_STATUS_LORE", "Law & Disorder"),
+    # },
 ]
 DEFAULT_CATEGORY = {
     "name": "Lowkey",

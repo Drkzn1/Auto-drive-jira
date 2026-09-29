@@ -24,6 +24,7 @@ kịch bản — xem config.py để đổi từ khoá / cột Jira / thêm nhó
   - Chứa "your life as every"  → folder DRIVE_FOLDER_ID_LORE, cột "Law & Disorder"
   - Chứa "star wars"           → folder DRIVE_FOLDER_ID_STARWARS, cột "POV Life"
   - Chứa "fallout"             → folder DRIVE_FOLDER_ID_FALLOUT, cột "Hidden Game Theory"
+  - Tiêu đề bắt đầu bằng "How" → folder DRIVE_FOLDER_ID_LOWKEY, cột "Lowkey Explainer"
   - Còn lại                    → folder DRIVE_FOLDER_ID_LOWKEY, cột "Lowkey Explainer"
 
 Cả 4 folder này PHẢI đã tồn tại sẵn trên Drive — script chỉ tạo folder con
@@ -85,15 +86,26 @@ def parse_script_file(path: str) -> dict:
 
 
 def categorize(title: str, content: str) -> dict:
-    """Xác định nhóm dựa trên từ khoá — soi cả tiêu đề lẫn nội dung (bắt được
-    cả hashtag như #StarWars ở cuối kịch bản). Khớp lần lượt theo thứ tự
-    trong config.CATEGORIES, cái nào khớp trước dùng cái đó; không khớp gì
-    thì rơi về config.DEFAULT_CATEGORY. Trả về dict {name, drive_folder_id,
+    """Xác định nhóm dựa trên từ khoá. Khớp lần lượt theo thứ tự trong
+    config.CATEGORIES, cái nào khớp trước dùng cái đó; không khớp gì thì rơi
+    về config.DEFAULT_CATEGORY. Trả về dict {name, drive_folder_id,
     jira_status} — trỏ thẳng vào 1 folder Drive có sẵn, KHÔNG tự tạo folder
-    mới."""
+    mới.
+
+    2 kiểu match hỗ trợ, tuỳ category có key nào:
+      - "keyword": substring, soi cả tiêu đề lẫn nội dung (bắt được cả
+        hashtag như #StarWars ở cuối kịch bản)
+      - "title_prefix": chỉ soi tiêu đề có BẮT ĐẦU bằng cụm này không (dùng
+        cho những từ phổ biến như "how" — nếu soi cả nội dung sẽ dính false
+        positive vào "however", "show"... liên tục)
+    """
     haystack = f"{title}\n{content}".lower()
+    title_lower = title.lower().strip()
     for category in config.CATEGORIES:
-        if category["keyword"].lower() in haystack:
+        if "title_prefix" in category:
+            if title_lower.startswith(category["title_prefix"].lower()):
+                return category
+        elif category["keyword"].lower() in haystack:
             return category
     return config.DEFAULT_CATEGORY
 

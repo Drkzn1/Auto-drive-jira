@@ -98,6 +98,20 @@ kich-ban-automation/
 
 ---
 
+## ⏸️ Trạng thái tạm dừng (29/09)
+
+Nhóm **Lore** đang bị **comment out** trong `config.CATEGORIES` (`config.py`) —
+kênh Lore & Disorder bị tắt kiếm tiền, nên kịch bản dạng "your life as every"
+giờ rơi thẳng xuống `DEFAULT_CATEGORY` (Lowkey Explainer) thay vì vào Lore &
+Disorder. Star Wars / Fallout / How-To không bị ảnh hưởng, vẫn hoạt động
+bình thường.
+
+**Để bật lại:** bỏ comment khối `"name": "Lore"` trong `config.py`, và bỏ
+đánh dấu "TEMPORARILY DISABLED" tương ứng trong skill `push-to-drive-jira`
+(`SKILL.md`) — không cần đổi gì khác, mọi ID/config vẫn giữ nguyên.
+
+---
+
 ## 🔜 Nếu tiếp tục làm gì đó, bắt đầu từ đây
 
 Khi mở lại phiên làm việc mới, đọc file này trước để nắm bối cảnh, sau đó xem
